@@ -10,18 +10,21 @@ defmodule MixFileEditor do
   @doc """
   Read the deps section of the mix file.
 
-  Returns a list of dependency tuples.
+  Returns a map of dependency info.
 
   ## Examples
 
       iex> MixFileEditor.deps("path/to/mix.exs")
-      [
-        {:phoenix, "~> 1.3.0"},
-        {:phoenix_pubsub, "~> 1.0"},
-        {:postgrex, ">= 0.0.0"},
-        {:gettext, "~> 0.11"},
-        {:cowboy, "~> 1.0"}
-      ]
+      %{
+        cowboy: %{value: {:cowboy, "~> 1.0"}, version: "~> 1.0"},
+        csv: %{value: {:csv, "~> 2.0.0"}, version: "~> 2.0.0"},
+        distillery: %{
+          value: {{:distillery, "~> 1.5", [runtime: false]}, []},
+          version: "~> 1.5"
+        },
+        ...
+      }
+
 
   """
   def deps(path) do

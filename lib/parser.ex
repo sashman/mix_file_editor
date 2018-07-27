@@ -5,6 +5,7 @@ defmodule MixFileEditor.Parser do
          deps_ast <- find_deps(module_contents),
          deps <- parse_deps_ast(deps_ast) do
       deps
+      |> deps_to_map
     else
       _ -> :error
     end
@@ -24,5 +25,29 @@ defmodule MixFileEditor.Parser do
          [do: do_contents] <- do_block do
       do_contents
     end
+  end
+
+  defp deps_to_map(deps) do
+    Enum.reduce(deps, %{}, fn dep, acc ->
+      dep
+      |> case do
+        {name, version} ->
+          acc
+          |> Map.put(name, %{
+            version: version,
+            value: dep
+          })
+
+        {:{}, _, [name, version, _]} ->
+          acc
+          |> Map.put(name, %{
+            version: version,
+            value: Code.eval_quoted(dep)
+          })
+
+        _ ->
+          acc
+      end
+    end)
   end
 end
