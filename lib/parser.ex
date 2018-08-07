@@ -7,7 +7,7 @@ defmodule MixFileEditor.Parser do
       deps
       |> deps_to_map
     else
-      _ -> :error
+      error -> {:error, error}
     end
   end
 
@@ -26,6 +26,8 @@ defmodule MixFileEditor.Parser do
       do_contents
     end
   end
+
+  defp deps_to_map(nil), do: nil
 
   defp deps_to_map(deps) do
     Enum.reduce(deps, %{}, fn dep, acc ->
